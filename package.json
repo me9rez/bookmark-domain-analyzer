@@ -1,6 +1,6 @@
 {
   "name": "bookmark-domain-analyzer",
-  "description": "一个实用的书签整理工具，帮你轻松管理浏览器书签！",
+  "description": "一个实用的书签重复域名分析工具，帮你轻松优化浏览器书签重复问题！",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

@@ -17,12 +17,16 @@
       </div>
       <ul v-if="item.bookmarks.length && isExpanded(index)">
         <li v-for="(bookmark, idx) in item.bookmarks" :key="idx">
-          <div>
+          <div class="bookmark-item">
             <a :href="bookmark.url" target="_blank">{{ bookmark.title }}<span class="link-icon">↗</span></a>
             <div v-if="bookmark.parents && bookmark.parents.length" class="parents-path">
               <span v-for="(parent, i) in bookmark.parents" :key="i">
                 {{ parent }}<span v-if="i < bookmark.parents.length - 1"> > </span>
               </span>
+            </div>
+            <div class="url-display" @click="copyUrl(bookmark.url)">
+              <span class="url-text">{{ bookmark.url }}</span>
+              <span class="copy-hint">点击复制</span>
             </div>
           </div>
         </li>
@@ -67,6 +71,16 @@ const scrollToDomain = (index: number) => {
   if (target) {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+}
+
+const copyUrl = (url: string) => {
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      alert('URL已复制到剪贴板');
+    })
+    .catch(err => {
+      console.error('复制失败:', err);
+    });
 }
 </script>
 <style scoped>
@@ -161,8 +175,10 @@ li>div span.domain {
 }
 
 li>div span.count {
-  color: var(--text-color);
-  opacity: 0.8;
+  color: #64b5f6;
+  font-size: 0.9em;
+  margin-left: 8px;
+  font-weight: 500;
 }
 
 li>ul {
@@ -174,29 +190,74 @@ li>ul {
 }
 
 li>ul li {
-  margin-bottom: 8px;
-  padding: 6px 0 6px 16px;
+  margin-bottom: 4px;
+  padding: 4px 0 4px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  left: 16px;
+  left: 12px;
 }
 
 a {
   display: block;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
   border-radius: var(--border-radius);
   color: #ffffff;
   text-decoration: none;
   transition: all 0.2s ease;
+  margin-bottom: 4px;
 }
 
 .parents-path {
-  font-size: 0.8em;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 4px;
-  padding-left: 12px;
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 6px 0 4px 0;
+  line-height: 1.4;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.parents-path::before {
+  content: '📁 ';
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.url-display {
+  font-size: 0.7em;
+  color: #64b5f6;
+  font-weight: 500;
+  margin-top: 2px;
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.url-display:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #90caf9;
+}
+
+.copy-hint {
+  font-size: 0.6em;
+  color: var(--primary-color);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.url-display:hover .copy-hint {
+  opacity: 1;
 }
 
 a:hover {
